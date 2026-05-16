@@ -1,0 +1,51 @@
+/* NovaBETT – Game | app.js */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC67B7s8iUUPaR_2JHFpXraSovtD6z77io",
+  authDomain: "my-project-groq.firebaseapp.com",
+  projectId: "my-project-groq",
+  storageBucket: "my-project-groq.firebasestorage.app",
+  messagingSenderId: "370359365720",
+  appId: "1:370359365720:web:18567f9f241f7f4d499a2d"
+};
+
+let db;
+window.addEventListener('load', () => {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  db.collection('settings').doc('knowledge').onSnapshot(snap => {
+    if (snap.exists) {
+      const el = document.getElementById('knowledgeBase');
+      if (el) el.value = snap.data().content || '';
+    }
+  });
+  document.title = BASE_TITLE;
+  addMessage('bot','မင်္ဂလာပါ! NovaBETT Game AI Support မှ ကြိုဆိုပါသည်။\nကျွန်ုပ်တို့ ဘာများ ကူညီပေးရမလဲ?',true);
+});
+
+window.saveToCloud = async () => {
+  const data = document.getElementById('knowledgeBase').value;
+  const btn  = document.getElementById('saveBtn');
+  if (!data.trim()) { alert('အချက်အလက် အရင်ဖြည့်ပါ။'); return; }
+  if (!db)          { alert('Firebase မတင်ရသေးပါ'); return; }
+  btn.disabled = true; btn.classList.remove('saved'); btn.innerHTML = 'Syncing…';
+  try {
+    await db.collection('settings').doc('knowledge').set({ content: data, updatedAt: new Date().toISOString() });
+    btn.innerHTML = `<svg><use href="#ico-shield"/></svg> Saved`; btn.classList.add('saved');
+    setTimeout(() => { btn.innerHTML = `<svg><use href="#ico-upload"/></svg> Push to Cloud`; btn.classList.remove('saved'); btn.disabled = false; }, 2800);
+  } catch(e) { alert('Error: ' + e.message); btn.disabled = false; }
+};
+
+window.logChat = async (user, bot) => {
+  try { if (db) await db.collection('chatLogs').add({ user, bot, timestamp: new Date().toISOString() }); } catch(_) {}
+};
+
+window.loadChatLogs = async () => {
+  const box = document.getElementById('logBox');
+  box.innerHTML = '<div class="log-empty">Loading…</div>';
+  if (!db) { box.innerHTML = '<div class="log-empty">Firebase မတင်ရသေးပါ</div>'; return; }
+  try {
+    const snap = await db.collection('chatLogs').orderBy('timestamp','desc').limit(50).get();
+    if (snap.empty) { **...**
+
+_This response is too long to display in full._
