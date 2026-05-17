@@ -11,13 +11,14 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
+<!-- SVG Symbol Library -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
   <symbol id="ico-logo" viewBox="0 0 36 36">
     <polygon points="18,2 32,10 32,26 18,34 4,26 4,10" fill="none" stroke="currentColor" stroke-width="1.6"/>
     <polygon points="18,8 27,13 27,23 18,28 9,23 9,13" fill="currentColor" opacity=".18"/>
-    <line x1="4" y1="10" x2="18" y2="18" stroke="currentColor" stroke-width="1" opacity=".4"/>
+    <line x1="4"  y1="10" x2="18" y2="18" stroke="currentColor" stroke-width="1" opacity=".4"/>
     <line x1="32" y1="10" x2="18" y2="18" stroke="currentColor" stroke-width="1" opacity=".4"/>
-    <line x1="4" y1="26" x2="18" y2="18" stroke="currentColor" stroke-width="1" opacity=".4"/>
+    <line x1="4"  y1="26" x2="18" y2="18" stroke="currentColor" stroke-width="1" opacity=".4"/>
     <line x1="32" y1="26" x2="18" y2="18" stroke="currentColor" stroke-width="1" opacity=".4"/>
     <circle cx="18" cy="18" r="2.5" fill="currentColor"/>
   </symbol>
@@ -57,8 +58,8 @@
     <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
   </symbol>
   <symbol id="ico-x" viewBox="0 0 24 24">
-    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="18" y1="6"  x2="6"  y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="6"  y1="6"  x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
   </symbol>
   <symbol id="ico-chevdown" viewBox="0 0 24 24">
     <polyline points="6 9 12 15 18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
@@ -96,7 +97,7 @@
     <line x1="18" y1="12" x2="18" y2="7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
     <circle cx="18" cy="5.5" r="1.8" stroke="currentColor" stroke-width="1.5" fill="none"/>
     <path d="M13 26h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-    <line x1="6" y1="20" x2="2" y2="20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="6"  y1="20" x2="2"  y2="20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
     <line x1="30" y1="20" x2="34" y2="20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
   </symbol>
   <symbol id="ico-lock" viewBox="0 0 24 24">
@@ -136,6 +137,7 @@
 </head>
 <body>
 <canvas id="particleCanvas"></canvas>
+
 <div class="bg">
   <div class="bg-noise"></div>
   <div class="bg-lines"></div>
@@ -143,6 +145,7 @@
   <div class="bg-orb bg-orb-2"></div>
   <div class="bg-orb bg-orb-3"></div>
 </div>
+
 <div class="overlay" id="overlay" onclick="closeAdmin()"></div>
 
 <div id="adminPanel">
@@ -173,6 +176,7 @@
   </div>
 
   <div class="tab-panel active" id="tab-kb">
+
     <!-- PASSWORD GATE -->
     <div id="kb-gate" style="display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:20px;">
       <div class="kb-gate-icon"><svg><use href="#ico-lock"/></svg></div>
@@ -195,7 +199,7 @@
       </div>
     </div>
 
-    <!-- KB CONTENT -->
+    <!-- KB CONTENT (shown after unlock) -->
     <div class="kb-content" id="kb-content">
       <div class="kb-unlocked-bar">
         <svg><use href="#ico-shield"/></svg>
@@ -208,6 +212,7 @@
         <svg><use href="#ico-upload"/></svg>Push to Cloud
       </button>
     </div>
+
   </div>
 
   <div class="tab-panel" id="tab-logs">
@@ -220,6 +225,7 @@
   <button class="scroll-fab" id="scrollFab" onclick="scrollDown()">
     <svg><use href="#ico-chevdown"/></svg>
   </button>
+
   <header>
     <div class="hd-logo" id="logoBtn" onclick="secretClick(event)">
       <svg><use href="#ico-logo"/></svg>
@@ -263,4 +269,4 @@
 
 <script src="app.js"></script>
 </body>
-</html>
+  </html>
