@@ -1,4 +1,4 @@
-/* Diamond-BETT Helper | Professional AI Assistant v3 */
+/* Diamond-BETT Helper | Professional AI Assistant v4 (Security & UX Update) */
 
 const firebaseConfig = {
   apiKey: "AIzaSyC67B7s8iUUPaR_2JHFpXraSovtD6z77io",
@@ -9,12 +9,18 @@ const firebaseConfig = {
   appId: "1:370359365720:web:18567f9f241f7f4d499a2d"
 };
 
-const KB_PASSWORD = 'admin_kyawg2006';
+const ADMIN_PASSWORD = 'admin_kyawg2006';
 let db;
+let isAdminUnlocked = false;
 let systemConfig = {
     workerUrl: 'https://nameless-mud-c256.zekyyyy2006.workers.dev/',
-    modelName: 'GPT-4.1'
+    modelName: 'GPT-4.1',
+    floatingQuestions: "မင်းဒီနေ့ ဘယ်လိုလဲ?🧐",
+    enableFloating: true
 };
+
+let lastQuickActionTime = 0;
+const COOLDOWN_TIME = 15000; // 15s
 
 // Sound Notifications
 const sendSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
@@ -29,12 +35,18 @@ async function loadSystemConfig() {
         const doc = await db.collection('settings').doc('config').get();
         if (doc.exists) {
             systemConfig = { ...systemConfig, ...doc.data() };
-            if (document.getElementById('workerUrlInput')) document.getElementById('workerUrlInput').value = systemConfig.workerUrl;
-            if (document.getElementById('modelNameInput')) document.getElementById('modelNameInput').value = systemConfig.modelName;
+            updateAdminUI();
         }
     } catch (e) {
         console.error("Config load error:", e);
     }
+}
+
+function updateAdminUI() {
+    if (document.getElementById('workerUrlInput')) document.getElementById('workerUrlInput').value = systemConfig.workerUrl;
+    if (document.getElementById('modelNameInput')) document.getElementById('modelNameInput').value = systemConfig.modelName;
+    if (document.getElementById('floatingQuestionsInput')) document.getElementById('floatingQuestionsInput').value = systemConfig.floatingQuestions;
+    if (document.getElementById('enableFloatingToggle')) document.getElementById('enableFloatingToggle').checked = systemConfig.enableFloating;
 }
 
 window.addEventListener('load', () => {
@@ -46,12 +58,31 @@ window.addEventListener('load', () => {
         }
     });
     addMessage('bot', 'မင်္ဂလာပါ! **Diamond-BETT Helper** မှ ကြိုဆိုပါသည်။ ကျွန်ုပ်တို့ ဘာများ ကူညီပေးရမလဲ?', true);
+    startFloatingNotiLoop();
 });
 
 // ============ ADMIN PANEL FUNCTIONS ============
 window.openAdmin = () => {
     document.getElementById('adminPanel').classList.add('open');
     document.getElementById('overlay').classList.add('show');
+    if (!isAdminUnlocked) {
+        document.getElementById('admin-gate').style.display = 'flex';
+        document.getElementById('admin-main-content').style.display = 'none';
+    } else {
+        document.getElementById('admin-gate').style.display = 'none';
+        document.getElementById('admin-main-content').style.display = 'flex';
+    }
+};
+
+window.tryUnlockAdmin = () => {
+    const pw = document.getElementById('adminPasswordInput').value;
+    if (pw === ADMIN_PASSWORD) {
+        isAdminUnlocked = true;
+        document.getElementById('admin-gate').style.display = 'none';
+        document.getElementById('admin-main-content').style.display = 'flex';
+    } else {
+        alert('Password မမှန်ပါ။');
+    }
 };
 
 window.closeAdmin = () => {
@@ -70,13 +101,16 @@ window.switchTab = (tabName) => {
 window.saveSystemConfig = async () => {
     const workerUrl = document.getElementById('workerUrlInput').value.trim();
     const modelName = document.getElementById('modelNameInput').value.trim();
+    const floatingQuestions = document.getElementById('floatingQuestionsInput').value.trim();
+    const enableFloating = document.getElementById('enableFloatingToggle').checked;
+    
     const btn = document.getElementById('saveConfigBtn');
-    if (!workerUrl) return alert('Worker URL ထည့်ပါ။');
     btn.disabled = true;
     btn.innerText = 'Saving...';
     try {
-        await db.collection('settings').doc('config').set({ workerUrl, modelName, updatedAt: new Date().toISOString() });
-        systemConfig = { workerUrl, modelName };
+        const updateData = { workerUrl, modelName, floatingQuestions, enableFloating, updatedAt: new Date().toISOString() };
+        await db.collection('settings').doc('config').set(updateData, { merge: true });
+        systemConfig = { ...systemConfig, ...updateData };
         alert('Config saved successfully!');
     } catch (e) {
         alert('Error saving config: ' + e.message);
@@ -84,22 +118,6 @@ window.saveSystemConfig = async () => {
         btn.disabled = false;
         btn.innerText = 'Save Config';
     }
-};
-
-window.tryUnlockKB = () => {
-    const pw = document.getElementById('kbPassword').value;
-    if (pw === KB_PASSWORD) {
-        document.getElementById('kb-gate').style.display = 'none';
-        document.getElementById('kb-content').classList.add('unlocked');
-    } else {
-        alert('Password မမှန်ပါ။');
-    }
-};
-
-window.lockKBAgain = () => {
-    document.getElementById('kb-gate').style.display = 'flex';
-    document.getElementById('kb-content').classList.remove('unlocked');
-    document.getElementById('kbPassword').value = '';
 };
 
 window.saveToCloud = async () => {
@@ -116,6 +134,26 @@ window.saveToCloud = async () => {
     }
 };
 
+// ============ FLOATING NOTI ============
+function startFloatingNotiLoop() {
+    setInterval(() => {
+        if (systemConfig.enableFloating && systemConfig.floatingQuestions) {
+            const questions = systemConfig.floatingQuestions.split('\n').filter(q => q.trim());
+            if (questions.length > 0) {
+                const randomQ = questions[Math.floor(Math.random() * questions.length)];
+                showFloatingBubble(randomQ);
+            }
+        }
+    }, 180000); // 3 minutes
+}
+
+function showFloatingBubble(text) {
+    const bubble = document.getElementById('floatingBubble');
+    bubble.innerText = text;
+    bubble.classList.add('show');
+    setTimeout(() => bubble.classList.remove('show'), 6000);
+}
+
 // ============ CHAT FUNCTIONS ============
 function addMessage(sender, text, isInitial = false) {
     const chatbox = document.getElementById('chatbox');
@@ -125,9 +163,9 @@ function addMessage(sender, text, isInitial = false) {
     if (sender === 'bot') {
         wrap.innerHTML = `
             <div class="bot-card">${marked.parse(text)}</div>
-            <div style="display:flex; justify-content: space-between; padding: 4px 8px; font-size: 9px; color: rgba(228,172,40,0.4);">
+            <div class="bot-meta">
                 <span>${new Date().toLocaleTimeString()}</span>
-                <span>${systemConfig.modelName}</span>
+                <span class="bot-model-tag"><i class="fas fa-microchip"></i> ${systemConfig.modelName}</span>
             </div>
         `;
         if (!isInitial) receiveSound.play().catch(e => console.log("Audio play blocked"));
@@ -186,6 +224,13 @@ window.handleSend = async () => {
 };
 
 window.quickSend = (text) => {
+    const now = Date.now();
+    if (now - lastQuickActionTime < COOLDOWN_TIME) {
+        const remaining = Math.ceil((COOLDOWN_TIME - (now - lastQuickActionTime)) / 1000);
+        alert(`ခေတ္တစောင့်ပါ... ${remaining} စက္ကန့်အကြာမှ ထပ်မံနှိပ်နိုင်ပါမည်။`);
+        return;
+    }
+    lastQuickActionTime = now;
     document.getElementById('userInput').value = text;
     handleSend();
 };

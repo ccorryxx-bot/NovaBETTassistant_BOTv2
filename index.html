@@ -13,92 +13,88 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-<body>
+<body oncontextmenu="return false;">
 <div class="bg">
   <div class="bg-noise"></div>
   <div class="bg-lines"></div>
   <div class="bg-orb bg-orb-1"></div>
   <div class="bg-orb bg-orb-2"></div>
-  <div class="bg-orb bg-orb-3"></div>
 </div>
 
 <div class="overlay" id="overlay" onclick="closeAdmin()"></div>
 
 <div id="adminPanel">
-  <div class="panel-hd">
-    <div class="panel-brand">
-      <div class="panel-logo"><i class="fas fa-cog"></i></div>
-      <div>
-        <div class="panel-ttl">Admin Console</div>
-        <div class="panel-sub">// Diamond-BETT Helper</div>
-      </div>
+  <!-- Admin Gate -->
+  <div class="admin-gate" id="admin-gate">
+    <div class="gate-icon"><i class="fas fa-shield-halved"></i></div>
+    <div class="gate-title">Admin Access Required</div>
+    <div class="gate-input-wrap">
+      <input type="password" id="adminPasswordInput" placeholder="Enter Admin Password" autocomplete="off"/>
     </div>
-    <button class="panel-close" onclick="closeAdmin()"><i class="fas fa-times"></i></button>
+    <button class="gate-btn" onclick="tryUnlockAdmin()">Unlock Console</button>
   </div>
 
-  <div class="panel-tabs">
-    <button class="tab-btn active" id="tab-kb-btn" onclick="switchTab('kb')">
-      <i class="fas fa-database"></i>KB
-    </button>
-    <button class="tab-btn" id="tab-config-btn" onclick="switchTab('config')">
-      <i class="fas fa-sliders-h"></i>Config
-    </button>
-    <button class="tab-btn" id="tab-logs-btn" onclick="switchTab('logs')">
-      <i class="fas fa-history"></i>Logs
-    </button>
-  </div>
-
-  <div class="tab-panel active" id="tab-kb">
-    <div id="kb-gate">
-      <div class="kb-gate-icon"><i class="fas fa-lock"></i></div>
-      <div class="kb-gate-title">Knowledge Base Access</div>
-      <div class="kb-gate-form">
-        <div class="kb-pw-wrap">
-          <input type="password" id="kbPassword" placeholder="Enter access code" autocomplete="off"/>
+  <!-- Admin Main Content -->
+  <div class="admin-main-content" id="admin-main-content">
+    <div class="panel-hd">
+      <div class="panel-brand">
+        <div class="panel-logo"><i class="fas fa-user-gear"></i></div>
+        <div>
+          <div class="panel-ttl">Admin Dashboard</div>
+          <div class="panel-sub">v4.0 // Diamond-BETT</div>
         </div>
-        <button id="kbUnlockBtn" onclick="tryUnlockKB()">Unlock Access</button>
       </div>
+      <button class="panel-close" onclick="closeAdmin()"><i class="fas fa-times"></i></button>
     </div>
-    <div class="kb-content" id="kb-content">
-      <div class="kb-unlocked-bar">
-        <i class="fas fa-shield-alt"></i>
-        <span class="kb-unlocked-txt">Access Granted</span>
-        <button class="kb-lock-btn" onclick="lockKBAgain()">Lock</button>
+
+    <div class="panel-tabs">
+      <button class="tab-btn active" id="tab-kb-btn" onclick="switchTab('kb')"><i class="fas fa-brain"></i>KB</button>
+      <button class="tab-btn" id="tab-config-btn" onclick="switchTab('config')"><i class="fas fa-gears"></i>Config</button>
+      <button class="tab-btn" id="tab-logs-btn" onclick="switchTab('logs')"><i class="fas fa-list-check"></i>Logs</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-kb">
+      <div class="panel-lbl">// knowledge_base.md</div>
+      <textarea id="knowledgeBase" placeholder="Enter AI knowledge base content..."></textarea>
+      <button id="saveBtn" onclick="saveToCloud()"><i class="fas fa-cloud-arrow-up"></i> Update KB</button>
+    </div>
+
+    <div class="tab-panel" id="tab-config">
+      <div class="panel-lbl">// system_environment.config</div>
+      <div class="config-group">
+        <label>Worker API URL</label>
+        <input type="text" id="workerUrlInput" placeholder="https://..."/>
       </div>
-      <div class="panel-lbl">// knowledge_base.config</div>
-      <textarea id="knowledgeBase"></textarea>
-      <button id="saveBtn" onclick="saveToCloud()"><i class="fas fa-cloud-upload-alt"></i> Push to Cloud</button>
+      <div class="config-group">
+        <label>AI Model Name</label>
+        <input type="text" id="modelNameInput" placeholder="e.g. Llama-3-70B"/>
+      </div>
+      <div class="config-group">
+        <label>Floating Questions (One per line)</label>
+        <textarea id="floatingQuestionsInput" rows="3" placeholder="မင်းဒီနေ့ ဘယ်လိုလဲ?🧐"></textarea>
+      </div>
+      <div class="toggle-group">
+        <input type="checkbox" id="enableFloatingToggle" checked/>
+        <label for="enableFloatingToggle">Enable Floating Notifications</label>
+      </div>
+      <button id="saveConfigBtn" onclick="saveSystemConfig()">Save System Config</button>
     </div>
-  </div>
 
-  <div class="tab-panel" id="tab-config">
-    <div class="panel-lbl">// system_config.env</div>
-    <div class="config-group">
-      <label>Worker URL</label>
-      <input type="text" id="workerUrlInput" placeholder="https://..."/>
+    <div class="tab-panel" id="tab-logs">
+      <div class="panel-lbl">// session_history.log</div>
+      <div class="log-box" id="logBox"></div>
     </div>
-    <div class="config-group">
-      <label>Model Name</label>
-      <input type="text" id="modelNameInput" placeholder="e.g. GPT-4.1"/>
-    </div>
-    <button id="saveConfigBtn" onclick="saveSystemConfig()">Save Config</button>
-  </div>
-
-  <div class="tab-panel" id="tab-logs">
-    <div class="panel-lbl">// recent_sessions.log</div>
-    <div class="log-box" id="logBox"></div>
   </div>
 </div>
 
 <div class="shell">
-  <button class="scroll-fab" id="scrollFab" onclick="scrollDown()">
-    <i class="fas fa-chevron-down"></i>
-  </button>
+  <div class="floating-bubble" id="floatingBubble"></div>
+  <button class="scroll-fab" id="scrollFab" onclick="scrollDown()"><i class="fas fa-arrow-down"></i></button>
 
   <header>
     <div class="hd-logo" onclick="secretClick(event)">
       <div class="logo-3d-wrap">
-        <div class="coin-bot"><i class="fas fa-robot"></i></div>
+        <div class="hologram-bot"><i class="fas fa-user-astronaut"></i></div>
       </div>
     </div>
     <div class="hd-info">
@@ -110,21 +106,21 @@
     </div>
     <div class="hd-right">
       <div class="hd-stat">
-        <div class="hd-stat-num"><i class="fas fa-users"></i><span>247</span></div>
-        <div class="hd-stat-lbl">Online Now</div>
+        <div class="hd-stat-num"><i class="fas fa-signal"></i><span>247</span></div>
+        <div class="hd-stat-lbl">Active Now</div>
       </div>
-      <button class="hd-admin-btn" onclick="openAdmin()"><i class="fas fa-cog"></i></button>
+      <button class="hd-admin-btn" onclick="openAdmin()"><i class="fas fa-lock"></i></button>
     </div>
   </header>
 
   <div class="chatbox" id="chatbox"></div>
 
   <div class="quick-grid">
-    <button class="q-btn" onclick="quickSend('အကောင့်ဖွင့်နည်း သိချင်ပါတယ်')"><i class="fas fa-user-plus"></i><span>အကောင့်</span></button>
-    <button class="q-btn" onclick="quickSend('ငွေသွင်းနည်း ရှင်းပြပေးပါ')"><i class="fas fa-wallet"></i><span>ငွေသွင်း</span></button>
-    <button class="q-btn" onclick="quickSend('ပရိုမိုးရှင်းတွေ ပြောပြပါ')"><i class="fas fa-gift"></i><span>ပရိုမိုးရှင်း</span></button>
-    <button class="q-btn" onclick="quickSend('ဂိမ်းအနိုင်ခန်းများ ကြည့်ချင်ပါ')"><i class="fas fa-trophy"></i><span>အနိုင်ခန်း</span></button>
-    <button class="q-btn" onclick="quickSend('Password ပြောင်းနည်း သိချင်ပါ')"><i class="fas fa-key"></i><span>Password</span></button>
+    <button class="q-btn" onclick="quickSend('အကောင့်ဖွင့်နည်း သိချင်ပါတယ်')"><i class="fas fa-id-card"></i><span>အကောင့်</span></button>
+    <button class="q-btn" onclick="quickSend('ငွေသွင်းနည်း ရှင်းပြပေးပါ')"><i class="fas fa-coins"></i><span>ငွေသွင်း</span></button>
+    <button class="q-btn" onclick="quickSend('ပရိုမိုးရှင်းတွေ ပြောပြပါ')"><i class="fas fa-fire"></i><span>ပရိုမိုးရှင်း</span></button>
+    <button class="q-btn" onclick="quickSend('ဂိမ်းအနိုင်ခန်းများ ကြည့်ချင်ပါ')"><i class="fas fa-chart-line"></i><span>အနိုင်ခန်း</span></button>
+    <button class="q-btn" onclick="quickSend('Password ပြောင်းနည်း သိချင်ပါ')"><i class="fas fa-shield"></i><span>လုံခြုံရေး</span></button>
   </div>
 
   <div class="input-area">
