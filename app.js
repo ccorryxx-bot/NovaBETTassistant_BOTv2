@@ -1,4 +1,4 @@
-/* Diamond-BETT Helper | Professional AI Assistant */
+/* Diamond-BETT Helper | Professional AI Assistant v3 */
 
 const firebaseConfig = {
   apiKey: "AIzaSyC67B7s8iUUPaR_2JHFpXraSovtD6z77io",
@@ -9,25 +9,28 @@ const firebaseConfig = {
   appId: "1:370359365720:web:18567f9f241f7f4d499a2d"
 };
 
-const KB_PASSWORD = 'admin123';
+const KB_PASSWORD = 'admin_kyawg2006';
 let db;
 let systemConfig = {
     workerUrl: 'https://nameless-mud-c256.zekyyyy2006.workers.dev/',
     modelName: 'GPT-4.1'
 };
 
+// Sound Notifications
+const sendSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
+const receiveSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 db = firebase.firestore();
 
-// Load Config from Firebase
 async function loadSystemConfig() {
     try {
         const doc = await db.collection('settings').doc('config').get();
         if (doc.exists) {
             systemConfig = { ...systemConfig, ...doc.data() };
-            document.getElementById('workerUrlInput').value = systemConfig.workerUrl;
-            document.getElementById('modelNameInput').value = systemConfig.modelName;
+            if (document.getElementById('workerUrlInput')) document.getElementById('workerUrlInput').value = systemConfig.workerUrl;
+            if (document.getElementById('modelNameInput')) document.getElementById('modelNameInput').value = systemConfig.modelName;
         }
     } catch (e) {
         console.error("Config load error:", e);
@@ -36,15 +39,12 @@ async function loadSystemConfig() {
 
 window.addEventListener('load', () => {
     loadSystemConfig();
-    
-    // Load Knowledge Base
     db.collection('settings').doc('knowledge').onSnapshot(snap => {
         if (snap.exists) {
             const el = document.getElementById('knowledgeBase');
             if (el) el.value = snap.data().content || '';
         }
     });
-
     addMessage('bot', 'မင်္ဂလာပါ! **Diamond-BETT Helper** မှ ကြိုဆိုပါသည်။ ကျွန်ုပ်တို့ ဘာများ ကူညီပေးရမလဲ?', true);
 });
 
@@ -67,23 +67,15 @@ window.switchTab = (tabName) => {
     if (tabName === 'logs') loadLogs();
 };
 
-// ============ CONFIG FUNCTIONS ============
 window.saveSystemConfig = async () => {
     const workerUrl = document.getElementById('workerUrlInput').value.trim();
     const modelName = document.getElementById('modelNameInput').value.trim();
     const btn = document.getElementById('saveConfigBtn');
-    
     if (!workerUrl) return alert('Worker URL ထည့်ပါ။');
-    
     btn.disabled = true;
     btn.innerText = 'Saving...';
-    
     try {
-        await db.collection('settings').doc('config').set({
-            workerUrl,
-            modelName,
-            updatedAt: new Date().toISOString()
-        });
+        await db.collection('settings').doc('config').set({ workerUrl, modelName, updatedAt: new Date().toISOString() });
         systemConfig = { workerUrl, modelName };
         alert('Config saved successfully!');
     } catch (e) {
@@ -94,7 +86,6 @@ window.saveSystemConfig = async () => {
     }
 };
 
-// ============ KNOWLEDGE BASE FUNCTIONS ============
 window.tryUnlockKB = () => {
     const pw = document.getElementById('kbPassword').value;
     if (pw === KB_PASSWORD) {
@@ -116,10 +107,7 @@ window.saveToCloud = async () => {
     const btn = document.getElementById('saveBtn');
     try {
         btn.disabled = true;
-        await db.collection('settings').doc('knowledge').set({
-            content: data,
-            updatedAt: new Date().toISOString()
-        });
+        await db.collection('settings').doc('knowledge').set({ content: data, updatedAt: new Date().toISOString() });
         alert('Knowledge Base updated!');
     } catch (e) {
         alert('Error: ' + e.message);
@@ -142,9 +130,10 @@ function addMessage(sender, text, isInitial = false) {
                 <span>${systemConfig.modelName}</span>
             </div>
         `;
+        if (!isInitial) receiveSound.play().catch(e => console.log("Audio play blocked"));
     } else {
         wrap.innerHTML = `<div class="user-bubble">${text}</div>`;
-        wrap.style.alignSelf = 'flex-end';
+        sendSound.play().catch(e => console.log("Audio play blocked"));
     }
     
     chatbox.appendChild(wrap);
@@ -182,24 +171,14 @@ window.handleSend = async () => {
         const response = await fetch(systemConfig.workerUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                message: text,
-                knowledge: kbContent,
-                model: systemConfig.modelName
-            })
+            body: JSON.stringify({ message: text, knowledge: kbContent, model: systemConfig.modelName })
         });
         
         const data = await response.json();
         removeThinking();
         addMessage('bot', data.reply || data.response || "တောင်းပန်ပါတယ်၊ အခုလောလောဆယ် မဖြေကြားနိုင်သေးပါ။");
         
-        // Log to Firebase
-        db.collection('logs').add({
-            user: text,
-            bot: data.reply || data.response,
-            timestamp: new Date().toISOString()
-        });
-        
+        db.collection('logs').add({ user: text, bot: data.reply || data.response, timestamp: new Date().toISOString() });
     } catch (e) {
         removeThinking();
         addMessage('bot', "Error: AI နဲ့ ချိတ်ဆက်လို့ မရပါ။ Worker URL ကို ပြန်စစ်ပေးပါ။");

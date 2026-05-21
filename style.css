@@ -1,4 +1,4 @@
-/* Diamond-BETT Helper Professional Style - Font Awesome Version */
+/* Diamond-BETT Helper Professional Style v3 */
 :root {
     --gold: #e4ac28;
     --gold-bright: #f0c840;
@@ -7,6 +7,7 @@
     --text-main: #fef9ee;
     --text-dim: rgba(255,255,255,0.45);
     --accent: #34d399;
+    --metallic: linear-gradient(135deg, #8e9eab 0%, #eef2f3 50%, #8e9eab 100%);
 }
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -18,24 +19,45 @@ body{
   color:var(--text-main);-webkit-font-smoothing:antialiased;
 }
 
-/* 3D Diamond Icon Effect */
+/* 3D Rotating Coin Bot Logo */
 .logo-3d-wrap {
     perspective: 1000px;
-    width: 42px;
-    height: 42px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.diamond-icon {
-    font-size: 22px;
-    color: var(--gold);
-    filter: drop-shadow(0 0 8px rgba(228,172,40,0.5));
-    animation: rotate3d 8s linear infinite;
+.coin-bot {
+    width: 32px;
+    height: 32px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-dark);
+    font-size: 18px;
+    box-shadow: 0 0 15px rgba(228,172,40,0.6), inset 0 0 8px rgba(0,0,0,0.3);
+    animation: rotateCoin 4s linear infinite;
+    transform-style: preserve-3d;
+    border: 2px solid var(--gold-bright);
 }
-@keyframes rotate3d {
+@keyframes rotateCoin {
     0% { transform: rotateY(0deg); }
     100% { transform: rotateY(360deg); }
+}
+
+/* Metallic Text Effect */
+.hd-name {
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: linear-gradient(to bottom, #cfd9df 0%, #e2ebf0 50%, #cfd9df 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));
 }
 
 /* Background */
@@ -46,16 +68,15 @@ body{
 .bg-orb-2{width:300px;height:300px;bottom:-80px;right:-60px;background:var(--accent);}
 
 /* Shell Layout */
-.shell{position:relative;z-index:1;width:100%;max-width:520px;display:flex;flex-direction:column;height:100%;background:rgba(8,7,15,0.95);backdrop-filter:blur(30px);border-left:1px solid rgba(228,172,40,0.1);border-right:1px solid rgba(228,172,40,0.1);box-shadow: 0 0 100px rgba(0,0,0,0.8);}
+.shell{position:relative;z-index:1;width:100%;max-width:520px;display:flex;flex-direction:column;height:100%;background:rgba(8,7,15,0.96);backdrop-filter:blur(30px);border-left:1px solid rgba(228,172,40,0.1);border-right:1px solid rgba(228,172,40,0.1);box-shadow: 0 0 100px rgba(0,0,0,0.8);}
 
 /* Header */
 header{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid rgba(228,172,40,0.1);background:rgba(0,0,0,0.4);height: 65px; flex-shrink: 0;}
 .hd-info{flex:1;display:flex;flex-direction:column;gap:2px;}
-.hd-name{font-size:15px;font-weight:700;color:var(--gold-bright);}
 .hd-tagline{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing: 0.5px;}
 .hd-tagline-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow: 0 0 6px var(--accent);}
 .hd-stat{display:flex;flex-direction:column;align-items:flex-end;margin-right: 10px;}
-.hd-stat-num{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;}
+.hd-stat-num{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace;}
 .hd-stat-num i { font-size: 11px; opacity: 0.6; }
 .hd-stat-lbl{font-size:8px;color:var(--text-dim);text-transform:uppercase;}
 .hd-admin-btn{width:32px;height:32px;border-radius:8px;border:1px solid rgba(228,172,40,0.15);background:rgba(228,172,40,0.05);color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;}
