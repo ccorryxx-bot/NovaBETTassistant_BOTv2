@@ -145,3 +145,80 @@ header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:
 .bot-card code { background: rgba(0,0,0,0.3); padding: 2px 5px; border-radius: 4px; font-family: 'DM Mono', monospace; }
 .bot-card pre { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; overflow-x: auto; margin: 10px 0; }
 .bot-card ul, .bot-card ol { padding-left: 20px; margin: 10px 0; }
+
+/* Fix SVG Icon Sizes */
+svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.hd-logo svg, .panel-logo svg, .tab-btn svg, .q-btn svg, .hd-admin-btn svg, .hd-stat-num svg, #sendBtn svg, .scroll-fab svg {
+    width: 20px;
+    height: 20px;
+}
+
+.hd-logo svg { width: 24px; height: 24px; }
+.hd-stat-num svg { width: 14px; height: 14px; }
+.tab-btn svg { width: 14px; height: 14px; }
+.q-btn svg { width: 18px; height: 18px; margin-bottom: 4px; }
+#sendBtn svg { width: 22px; height: 22px; }
+
+/* Quick Buttons Layout Fix */
+.quick-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(0,0,0,0.2);
+}
+
+.q-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(228,172,40,0.05);
+    border: 1px solid rgba(228,172,40,0.1);
+    border-radius: 8px;
+    padding: 8px 4px;
+    color: var(--text-dim);
+    font-size: 9px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.q-btn:hover {
+    background: rgba(228,172,40,0.15);
+    color: var(--gold);
+}
+
+/* Header Fix */
+header {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hd-info {
+    margin-right: auto;
+    margin-left: 10px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 480px) {
+    .quick-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+        padding: 8px;
+    }
+    .q-btn {
+        padding: 6px 2px;
+        font-size: 8px;
+    }
+    .q-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+}
