@@ -12,8 +12,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<!-- SVG Symbol Library -->
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+<!-- SVG Symbol Library (Hidden) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none !important;">
   <symbol id="ico-logo" viewBox="0 0 36 36">
     <path d="M18 2L32 10V26L18 34L4 26V10L18 2Z" fill="none" stroke="currentColor" stroke-width="1.6"/>
     <path d="M18 8L27 13V23L18 28L9 23V13L18 8Z" fill="currentColor" opacity=".18"/>
@@ -45,7 +45,7 @@
   </symbol>
   <symbol id="ico-x" viewBox="0 0 24 24">
     <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="6"  y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
   </symbol>
   <symbol id="ico-chevdown" viewBox="0 0 24 24">
     <polyline points="6 9 12 15 18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
@@ -201,11 +201,11 @@
   <div class="chatbox" id="chatbox"></div>
 
   <div class="quick-grid">
-    <button class="q-btn" onclick="quickSend('အကောင့်ဖွင့်နည်း သိချင်ပါတယ်')"><svg><use href="#ico-account"/></svg>အကောင့်</button>
-    <button class="q-btn" onclick="quickSend('ငွေသွင်းနည်း ရှင်းပြပေးပါ')"><svg><use href="#ico-wallet"/></svg>ငွေသွင်း</button>
-    <button class="q-btn" onclick="quickSend('ပရိုမိုးရှင်းတွေ ပြောပြပါ')"><svg><use href="#ico-gift"/></svg>ပရိုမိုးရှင်း</button>
-    <button class="q-btn" onclick="quickSend('ဂိမ်းအနိုင်ခန်းများ ကြည့်ချင်ပါ')"><svg><use href="#ico-trophy"/></svg>အနိုင်ခန်း</button>
-    <button class="q-btn" onclick="quickSend('Password ပြောင်းနည်း သိချင်ပါ')"><svg><use href="#ico-key"/></svg>Password</button>
+    <button class="q-btn" onclick="quickSend('အကောင့်ဖွင့်နည်း သိချင်ပါတယ်')"><svg><use href="#ico-account"/></svg><span>အကောင့်</span></button>
+    <button class="q-btn" onclick="quickSend('ငွေသွင်းနည်း ရှင်းပြပေးပါ')"><svg><use href="#ico-wallet"/></svg><span>ငွေသွင်း</span></button>
+    <button class="q-btn" onclick="quickSend('ပရိုမိုးရှင်းတွေ ပြောပြပါ')"><svg><use href="#ico-gift"/></svg><span>ပရိုမိုးရှင်း</span></button>
+    <button class="q-btn" onclick="quickSend('ဂိမ်းအနိုင်ခန်းများ ကြည့်ချင်ပါ')"><svg><use href="#ico-trophy"/></svg><span>အနိုင်ခန်း</span></button>
+    <button class="q-btn" onclick="quickSend('Password ပြောင်းနည်း သိချင်ပါ')"><svg><use href="#ico-key"/></svg><span>Password</span></button>
   </div>
 
   <div class="input-area">
